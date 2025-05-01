@@ -2,6 +2,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { access, readdir } from "node:fs/promises";
 import { ERRORS } from "../constants.js";
+import { invalidInput } from "./invalidInput.js";
 
 export let currentDirectory = os.homedir();
 
@@ -15,6 +16,7 @@ export async function up() {
 
 export async function cd(newPath) {
   try {
+    if (!newPath) invalidInput();
     if (path.isAbsolute(newPath)) {
       await access(path.parse(newPath).dir);
       currentDirectory = newPath;
@@ -22,8 +24,9 @@ export async function cd(newPath) {
       await access(path.join(currentDirectory, newPath));
       currentDirectory = path.join(currentDirectory, newPath);
     }
-  } catch {
-    console.error(ERRORS.OPERATION_FAILED);
+  } catch (error) {
+    if (error.message === ERRORS.INVALID_INPUT_CODE) console.log(ERRORS.INVALID_INPUT);
+    else console.error(ERRORS.OPERATION_FAILED);
   }
 }
 
