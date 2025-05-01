@@ -2,7 +2,6 @@ import { stdin, stdout } from "node:process";
 import { createInterface } from "node:readline";
 
 import { greeting } from "./utils/greeting.js";
-import { EXIT_COMMAND } from "./constants.js";
 import { parseInput } from "./utils/parseInput.js";
 import { printCurrentDirectory } from "./utils/navigation.js";
 import { getUserName } from "./utils/getUserName.js";
@@ -17,9 +16,6 @@ async function fileManager() {
   const rl = createInterface({ input: stdin, output: stdout });
 
   rl.on("line", (line) => {
-    if (line.toString().trim() === EXIT_COMMAND) {
-      process.exit();
-    }
     parseInput(line);
   });
 
