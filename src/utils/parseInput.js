@@ -5,7 +5,7 @@ import { hash } from "./hash.js";
 import { compress, decompress } from "./zip.js";
 import { ERRORS, EXIT_COMMAND } from "../constants.js";
 
-export async function parseInput(input) {
+export async function parseInput(input, rl) {
   const [command, ...args] = input.includes('"')
     ? input
         .split('"')
@@ -80,5 +80,5 @@ export async function parseInput(input) {
     }
   }
 
-  printCurrentDirectory();
+  printCurrentDirectory(rl);
 }

@@ -1,7 +1,7 @@
 import { createReadStream, createWriteStream } from "node:fs";
 import * as path from "node:path";
 import { mkdir as makeDir, rename, rm as remove } from "node:fs/promises";
-import { currentDirectory } from "./navigation.js";
+import { cwd } from "node:process";
 import { ERRORS } from "../constants.js";
 import { generatePath } from "./path.js";
 import { invalidInput } from "./invalidInput.js";
@@ -22,7 +22,7 @@ export async function cat(pathToFile) {
 export async function add(fileName) {
   try {
     if (!fileName) invalidInput();
-    const ws = createWriteStream(path.join(currentDirectory, fileName));
+    const ws = createWriteStream(path.join(cwd(), fileName));
     ws.write("");
   } catch (error) {
     if (error.message === ERRORS.INVALID_INPUT_CODE) console.log(ERRORS.INVALID_INPUT);
@@ -33,7 +33,7 @@ export async function add(fileName) {
 export async function mkdir(dirName) {
   try {
     if (!dirName) invalidInput();
-    await makeDir(path.join(currentDirectory, dirName));
+    await makeDir(path.join(cwd(), dirName));
   } catch (error) {
     if (error.message === ERRORS.INVALID_INPUT_CODE) console.log(ERRORS.INVALID_INPUT);
     else console.error(ERRORS.OPERATION_FAILED);

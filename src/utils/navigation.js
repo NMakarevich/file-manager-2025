@@ -3,15 +3,17 @@ import * as path from "node:path";
 import { access, readdir } from "node:fs/promises";
 import { ERRORS } from "../constants.js";
 import { invalidInput } from "./invalidInput.js";
+import { cwd, chdir } from "node:process";
 
-export let currentDirectory = os.homedir();
+chdir(os.homedir());
 
-export function printCurrentDirectory() {
-  console.log(`You are currently in ${currentDirectory}`);
+export function printCurrentDirectory(rl) {
+  console.log(`You are currently in ${cwd()}`);
+  rl.prompt();
 }
 
 export async function up() {
-  return await cd("..");
+  chdir("..");
 }
 
 export async function cd(newPath) {
@@ -19,10 +21,10 @@ export async function cd(newPath) {
     if (!newPath) invalidInput();
     if (path.isAbsolute(newPath)) {
       await access(path.parse(newPath).dir);
-      currentDirectory = newPath;
+      chdir(newPath);
     } else {
-      await access(path.join(currentDirectory, newPath));
-      currentDirectory = path.join(currentDirectory, newPath);
+      await access(path.join(cwd(), newPath));
+      chdir(path.join(cwd(), newPath));
     }
   } catch (error) {
     if (error.message === ERRORS.INVALID_INPUT_CODE) console.log(ERRORS.INVALID_INPUT);
@@ -32,7 +34,7 @@ export async function cd(newPath) {
 
 export async function ls() {
   try {
-    const dirents = await readdir(currentDirectory, { withFileTypes: true });
+    const dirents = await readdir(cwd(), { withFileTypes: true });
     const directories = dirents
       .filter((dirent) => dirent.isDirectory())
       .map((dirent) => ({ Name: dirent.name, Type: "directory" }))
