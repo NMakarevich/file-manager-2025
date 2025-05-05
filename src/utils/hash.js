@@ -21,6 +21,7 @@ export function hash(pathToFile) {
       });
       rs.on("error", () => {
         console.error(ERRORS.OPERATION_FAILED);
+        resolve();
       });
     });
   } catch (error) {

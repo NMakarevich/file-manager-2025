@@ -17,7 +17,10 @@ export async function cat(pathToFile) {
         console.log(data);
         resolve(data);
       });
-      rs.on("error", () => console.log(ERRORS.OPERATION_FAILED));
+      rs.on("error", () => {
+        console.log(ERRORS.OPERATION_FAILED);
+        resolve();
+      });
     });
   } catch (error) {
     if (error.message === ERRORS.INVALID_INPUT_CODE) console.log(ERRORS.INVALID_INPUT);
