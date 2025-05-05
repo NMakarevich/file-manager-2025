@@ -9,10 +9,16 @@ import { invalidInput } from "./invalidInput.js";
 export async function cat(pathToFile) {
   try {
     if (!pathToFile) invalidInput();
-    const rs = createReadStream(generatePath(pathToFile));
-    let data = "";
-    rs.on("data", (chunk) => (data += chunk.toString()));
-    rs.on("end", () => console.log(data));
+    return new Promise((resolve) => {
+      const rs = createReadStream(generatePath(pathToFile));
+      let data = "";
+      rs.on("data", (chunk) => (data += chunk.toString()));
+      rs.on("end", () => {
+        console.log(data);
+        resolve(data);
+      });
+      rs.on("error", () => console.log(ERRORS.OPERATION_FAILED));
+    });
   } catch (error) {
     if (error.message === ERRORS.INVALID_INPUT_CODE) console.log(ERRORS.INVALID_INPUT);
     else console.error(ERRORS.OPERATION_FAILED);
