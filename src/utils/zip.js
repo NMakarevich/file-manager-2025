@@ -10,7 +10,7 @@ export async function compress(pathToFile, pathToDestination) {
   try {
     if (!pathToFile || !pathToDestination) invalidInput();
     const source = generatePath(pathToFile);
-    const filename = `${path.parse(source).base}.zip`;
+    const filename = `${path.parse(source).base}.br`;
     const dest = path.join(generatePath(pathToDestination), filename);
     const rs = createReadStream(source);
     const ws = createWriteStream(dest);
